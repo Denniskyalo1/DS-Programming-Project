@@ -1,16 +1,14 @@
 import random
 
-M = 512   # total slots on the ring
-K = 9     # virtual servers per physical server (log2(M))
+M = 512
+K = 9
 
 
 def H(request_id: int) -> int:
-    """Maps a client request id to a slot on the ring."""
     return (request_id ** 2 + 2 * request_id + 17) % M
 
 
 def PHI(server_id: int, replica_id: int) -> int:
-    """Maps a virtual server (server_id, replica_id) to a slot on the ring."""
     i, j = server_id, replica_id
     return (i ** 2 + j ** 2 + 2 * j + 25) % M
 
@@ -63,7 +61,12 @@ class ConsistentHashRing:
             tries += 1
         return self.ring[slot]
 
+    def hostnames(self):
+        return list(self.server_ids.keys())
+
+    def count(self):
+        return len(self.server_ids)
+
 
 def random_request_id():
-    """Simulates a 6-digit random client request id."""
     return random.randint(100000, 999999)
