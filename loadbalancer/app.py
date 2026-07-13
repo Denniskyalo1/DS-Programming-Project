@@ -71,9 +71,14 @@ def add_servers():
             if new_name not in current_hosts:
                 final_hostnames.append(new_name)
 
+        seen_hosts = set(current_hosts)
         for host in final_hostnames:
+            if host in seen_hosts:
+                print(f"[Skip] '{host}' already exists in the ring, not redeploying")
+                continue
             if deploy_docker_container(host):
                 ring.add_server(host)
+                seen_hosts.add(host)
 
         current_hosts = ring.hostnames()
 
@@ -144,12 +149,12 @@ def route_request(path):
 
     try:
         resp = requests.get(f"http://{hostname}:5000/{path}", timeout=2)
+        if resp.status_code == 404:
+            return jsonify({
+                "message": f"<Error> '/{path}' endpoint does not exist in server replicas",
+                "status": "failure"
+            }), 400
         return (resp.content, resp.status_code, resp.headers.items())
-    except requests.exceptions.HTTPError:
-        return jsonify({
-            "message": f"<Error> '/{path}' endpoint does not exist in server replicas",
-            "status": "failure"
-        }), 400
     except requests.exceptions.RequestException:
         return jsonify({
             "message": f"<Error> Server '{hostname}' unreachable",
