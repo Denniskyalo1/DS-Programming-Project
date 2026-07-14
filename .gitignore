@@ -1,0 +1,10 @@
+# Python cache
+__pycache__/
+*.pyc
+
+# Python virtual environments
+.venv/
+
+# Analysis outputs
+analysis/distribution.csv
+analysis/scaling_results.csv

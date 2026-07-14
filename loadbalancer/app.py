@@ -18,7 +18,7 @@ def generate_random_hostname():
     return "server_" + "".join(random.choices(string.ascii_lowercase + string.digits, k=6))
 
 def deploy_docker_container(hostname):
-    command = f"sudo docker run --name {hostname} --network net1 --network-alias {hostname} -e SERVER_ID={hostname} -d my-server-image:latest"
+    command = f" docker run --name {hostname} --network net1 --network-alias {hostname} -e SERVER_ID={hostname} -d server_image:latest"
     res = os.popen(command).read().strip()
     if len(res) == 0:
         print(f"[Error] Unable to start container: {hostname}")
@@ -27,7 +27,7 @@ def deploy_docker_container(hostname):
     return True
 
 def destroy_docker_container(hostname):
-    command = f"sudo docker stop {hostname} && sudo docker rm {hostname}"
+    command = f" docker stop {hostname} && sudo docker rm {hostname}"
     os.system(command)
     print(f"[Cleanup] Destroyed container: {hostname}")
 
