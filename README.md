@@ -221,3 +221,93 @@ The final report includes screenshots demonstrating:
 - Performance graphs
 
 ---
+## Deployment
+
+### Prerequisites
+
+Before running the project, ensure the following software is installed:
+
+- Docker
+- Docker Compose
+- GNU Make
+- Python 3 (for running analysis scripts)
+
+### Project Structure
+
+```
+DS-Programming-Project/
+│
+├── server/
+├── loadbalancer/
+├── analysis/
+├── Makefile
+├── docker-compose.yml
+├── README.md
+└── TESTING.md
+```
+
+### Build the Docker Images
+
+```bash
+make build
+```
+
+This builds:
+
+- `server_image`
+- `lb_image`
+
+### Start the System
+
+```bash
+make run
+```
+
+This starts the load balancer, which automatically launches the initial three server replicas.
+
+### Verify Deployment
+
+Check the running containers:
+
+```bash
+docker ps
+```
+
+Verify the load balancer:
+
+```bash
+curl http://localhost:5000/rep
+```
+
+### Stop the System
+
+```bash
+make stop
+```
+
+### Clean Up Containers
+
+```bash
+make clean
+```
+
+### Running the Analysis Scripts
+
+Activate the virtual environment:
+
+```bash
+cd analysis
+source .venv/bin/activate
+```
+
+Run the benchmark:
+
+```bash
+python benchmark.py
+```
+
+Run the scalability test:
+
+```bash
+python scale_test.py
+```
