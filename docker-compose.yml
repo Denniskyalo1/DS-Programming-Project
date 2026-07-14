@@ -1,0 +1,17 @@
+version: "3.9"
+
+services:
+  loadbalancer:
+    image: lb_image
+    container_name: loadbalancer
+    ports:
+      - "5000:5000"
+    networks:
+      - net1
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+    restart: unless-stopped
+
+networks:
+  net1:
+    driver: bridge
